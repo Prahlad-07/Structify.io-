@@ -1,32 +1,32 @@
 [
-    {
-        "title" : "Linked List Nedir?",
-        "contentText" : "Linked List, veri yapılarından biridir ve verilerin bağlantılı düğümler halinde saklandığı bir koleksiyon türüdür.Her düğüm, veriyi ve bir sonraki düğümün referansını (link) içerir.Verilerin bellekte ardışık olması gerekmez, her düğüm farklı bir hafıza bölgesinde bulunabilir.",
-        "imagePaths" : ["https://raw.githubusercontent.com/ngryman/artworks/master/ds-linked-list/heading/ds-linked-list@2x.png"]
-    },
-    {
-        "title" : "Singly Linked List (Tek Yönlü Bağlantılı Liste)",
-        "contentText" : "Tek yönlü bağlantılı listede her düğüm, yalnızca bir sonraki düğüme referans verir.Listenin başını (head) ve sonunu (tail) tutan referanslar vardır.Listenin sonunda NULL (boş) bir referans bulunur.",
-        "imagePaths" : []
-    },
-    {
-        "title" : "Doubly Linked List (Çift Yönlü Bağlantılı Liste)",
-        "contentText" : "Çift yönlü bağlantılı listede her düğüm, hem bir sonraki düğüme hem de bir önceki düğüme referans verir.Bu sayede hem ileri hem de geri yönde gezinme yapmak mümkündür.Baş ve son düğümlerin referansları tutulur.",
-        "imagePaths" : []
-    },
-    {
-        "title" : "Circular Linked List (Dairesel Bağlantılı Liste)",
-        "contentText" : "Dairesel bağlantılı listede son düğümün referansı baş düğüme yönlendirilir, böylece liste bir döngü oluşturur.Bu sayede son düğümden başa geri dönüş yapılabilir.Dairesel bağlantılı liste, bazı durumlarda verilerin döngüsel bir şekilde işlenmesi gerektiğinde kullanışlı olabilir.",
-        "imagePaths" : []
-    },
-    {
-        "title" : "Linked List Avantajları ve Dezavantajları",
-        "contentText" : "Avantajlar:\n\n\n\nVeri ekleme ve çıkarma işlemleri hızlıdır, çünkü yalnızca ilgili düğümler güncellenir.\n\nListe boyutu dinamik olarak büyütülebilir.\n\n\n\nDezavantajlar:\n\n\n\nBelirli bir düğüme doğrudan erişim sağlamak için liste başından başlamak ve ilerlemek gerekebilir.\n\nEkstra bellek kullanımı, her düğümün referansını saklamak için gereklidir.",
-        "imagePaths" : []
-    },
-    {
-        "title" : "Linked List Kullanım Alanları",
-        "contentText" : "Bağlantılı veri yapısı gerektiren veri yapısı uygulamalarında kullanılabilir.Yığıt (stack) ve kuyruk (queue) gibi diğer veri yapıları Linked List ile uygulanabilir.Graf veri yapılarının temelini oluşturabilir.",
-        "imagePaths" : []
-    }
+  {
+    "title": "What is a Linked List?",
+    "contentText": "A linked list is a linear data structure made of nodes. Each node stores data and a reference to the next node.",
+    "imagePaths": ["https://media.geeksforgeeks.org/wp-content/uploads/20220712172013/Singlelinkedlist.png"]
+  },
+  {
+    "title": "Singly Linked List",
+    "contentText": "Each node points only to the next node. Traversal is one-directional from head to tail.",
+    "imagePaths": []
+  },
+  {
+    "title": "Doubly Linked List",
+    "contentText": "Each node stores references to both next and previous nodes. This allows forward and backward traversal.",
+    "imagePaths": []
+  },
+  {
+    "title": "Circular Linked List",
+    "contentText": "In a circular linked list, the last node points back to the head, creating a loop structure.",
+    "imagePaths": []
+  },
+  {
+    "title": "Advantages and Drawbacks",
+    "contentText": "Insertion and deletion are efficient when node references are known. Random access is slower than arrays because traversal is sequential.",
+    "imagePaths": []
+  },
+  {
+    "title": "Use Cases",
+    "contentText": "Linked lists are used for dynamic memory structures, implementing stacks/queues, and adjacency representations in graphs.",
+    "imagePaths": []
+  }
 ]

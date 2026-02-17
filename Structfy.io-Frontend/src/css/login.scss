@@ -1,121 +1,110 @@
-@import url('https://fonts.googleapis.com/css?family=Jura:400');
-//* { font-family: Jura, Arial; font-weight: 400; font-size:medium}
-body { margin: 0; padding: 0; }
-h1,h2,h3,h4,h5,h6,p { margin: 0; }
-
 section#entry-page {
   display: grid;
-  grid-template-columns: 1fr minmax(200px,550px) 1fr;
-  grid-template-rows: 1fr minmax(auto,1fre) 1fr;
-  grid-gap: 10px;
-  width: 100%;
-  height: 100vh;
-  
-  box-sizing: border-box;
+  grid-template-columns: 1fr minmax(320px, 620px) 1fr;
+  min-height: 100vh;
+  padding: 20px;
+
   form {
     grid-column: 2;
-    grid-row: 2;
-    display: grid;
-    grid-gap: 10px;
     margin: auto 0;
-    padding: 20px;
-    background-color: rgba(255,255,255,0.9);
-    border-radius: 10px;
-    box-shadow: 0 32px 64px rgba(0,0,0,0.2);
+    padding: 34px;
+    display: grid;
+    gap: 14px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+
     h2 {
-      margin-bottom: 5px;
       text-align: center;
-      text-shadow: 0 4px 16px #fff;
-      font-size: 2em;
-      font-weight: 100;
+      color: var(--text-strong);
+      font-size: 1.9rem;
+      font-weight: 700;
     }
+
     fieldset {
+      border: 0;
       margin: 0;
-      background-color: #fff;
-      
-      border: none;
-      border-radius: 5px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      padding: 0;
+
       legend {
-        padding: 5px;
-        background-color: #fff;
-        border-radius: 5px;
+        color: var(--text-muted);
+        font-weight: 600;
+        margin-bottom: 4px;
       }
+
       ul {
-        
         margin: 0;
         padding: 0;
-        li {
-          display: grid;
-          align-items: center;
-          margin: 10px;
-          a {
-            color: #02c;
-          }
-          em {
-            grid-column: span 2;
-            text-align: center;
-            padding: 5px;
-          }
-          label {
-            font-size: 1.3em;
-            text-align: left;
-            padding-bottom: 2px;
-          }
-          input {
-            padding: 5px;
-            margin-left: 45px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            &:hover {
-              border: 1px solid #aaf;
-            }
-          }
+        list-style: none;
+      }
+
+      li {
+        display: grid;
+        grid-template-columns: 1fr 1.7fr;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0;
+
+        label {
+          text-align: right;
+          font-weight: 600;
+          color: var(--text-strong);
+        }
+
+        input {
+          width: 100%;
+          border: 1px solid var(--border-strong);
+          border-radius: var(--radius-sm);
+          padding: 10px 12px;
+          background: #fff;
+        }
+
+        input:focus {
+          border-color: var(--primary-500);
+          outline: 2px solid rgba(58, 103, 200, 0.12);
         }
       }
     }
-    button {
-      font-size: 1.5em;
-      padding: 10px;
-      border:1px solid rgba(0,0,0,0);
-      border-radius: 5px;
-      background: #fff;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-      &:hover {
-        background-color: #eef;
-        border: 1px solid #aaf;
-      }
+
+    button,
+    .btn {
+      border: 0;
+      border-radius: var(--radius-sm);
+      padding: 11px 14px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary-600), var(--primary-500));
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: transform 160ms ease;
+      text-align: center;
+      text-decoration: none;
     }
-  }
-}
-@media only screen and (min-width: 420px) {
-  form {
-    h2 {
-      font-size: 40px;
-    }
-    fieldset {
-      ul {
-        li {
-          grid-template-columns: 100px 1fr;
-          label {
-            padding-right: 10px;
-            padding-bottom: 0;
-            text-align: right !important;
-          }
-        }
-      }
+
+    button:hover,
+    .btn:hover {
+      transform: translateY(-1px);
     }
   }
 }
 
-@keyframes Gradient {
-  0% {
-    background-position: 0% 50%
+@media only screen and (max-width: 768px) {
+  section#entry-page {
+    grid-template-columns: 1fr;
   }
-  50% {
-    background-position: 100% 50%
+
+  section#entry-page form {
+    grid-column: 1;
+    padding: 24px;
   }
-  100% {
-    background-position: 0% 50%
+
+  section#entry-page form fieldset li {
+    grid-template-columns: 1fr;
+  }
+
+  section#entry-page form fieldset li label {
+    text-align: left;
   }
 }
+

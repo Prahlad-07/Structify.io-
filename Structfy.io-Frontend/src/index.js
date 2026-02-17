@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import './css/theme.css';
 import './css/index.css';
 import Login from './component/Login';
 import CourseMain from './component/CourseMain';
 import reportWebVitals from './reportWebVitals';
 import AuthCheck from './component/AuthCheck';
-import FreeSpace from './component/FreeSpace';
+import VisualizerPage from './features/visualizer/VisualizerPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -15,7 +16,7 @@ root.render(
       <Route path='/' element={<Login />} />
       <Route path='/auth' element={<AuthCheck />} />
       <Route path='/courseMain' element={<CourseMain />} />
-      <Route path='/freespace' element={<FreeSpace />} />
+      <Route path='/freespace' element={<VisualizerPage />} />
     </Routes>
   </BrowserRouter>  
 );

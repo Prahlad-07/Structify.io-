@@ -1,64 +1,74 @@
-
-.quiz-header>h2{
-    background-color: rgb(245, 245, 246);
-    border-radius: 1rem;
-    width: 50%;
-    margin-left: 25%;
-    font-weight: bold;
-    font-family: monospace;
+.exam-root {
+  padding: 12px;
 }
 
-.exam-root{
-    display: flex;
-    flex-direction: column;   
-    gap:2rem;
-    font-size: large;
+.quiz-header {
+  text-align: center;
 }
 
-.quiz-body{
-    display: flex;
-    flex-direction: column;
-    gap:1rem;
-    padding: 1rem;
+.quiz-header > h2 {
+  margin: 0 auto;
+  max-width: 620px;
+  padding: 14px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-sm);
 }
 
-.options{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    margin:1.7rem;
-    
+.quiz-body {
+  margin-top: 12px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 18px;
+  display: grid;
+  gap: 14px;
 }
 
-.option{
-    flex: 1 0 35%;
-    margin: 10px;
-    padding: 2px;
-    background-color: rgb(245, 245, 246);
-    box-shadow: 2px 3px 4px 5px rgba(34, 34, 33, 0.2);
+.options,
+.leveloptions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 10px;
 }
 
-.option>label{
-    margin:8px;
+.option {
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius-sm);
+  padding: 10px;
+  background: var(--bg-surface-soft);
 }
 
-.btn-answer{
-    margin-left: auto;
-    float: right;
-    background-color: rgb(219, 198, 11);
-    cursor:pointer;
+.option label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.btn-answer-submit{
-    background-color: rgb(219, 42, 11);
-    float: right;
-    color: white;
+.btn-answer,
+.btn-answer-submit {
+  border: 0;
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-.btn-answer-submit>img{
-    filter: invert(100%);
+.btn-answer {
+  background: var(--primary-600);
 }
 
-.confirm-buttons>button{
-    margin: 0 100px 0 100px;
+.btn-answer-submit {
+  background: var(--danger-500);
 }
+
+.confirm-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+

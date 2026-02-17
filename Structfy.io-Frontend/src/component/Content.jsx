@@ -22,8 +22,8 @@ export function Content() {
     return (      
         <div className='bg'>
             <div className="middle">
-              <h1>{` Hoş geldin ${name} ${surname}`}</h1>
-              <h2>{`Yukardan bir kurs seç ve hemen öğrenmeye başlayalım`}</h2>
+              <h1>{` Welcome ${name} ${surname}`}</h1>
+              <h2>{`Choose a course above and start learning now`}</h2>
               <hr />
               <p>-VisualDataStructureCourse-</p>
             </div>
@@ -35,31 +35,38 @@ export function Profile(){
     const [uid] = useState(localStorage.getItem("uid"));
     const [results,setResults] = useState([new Result(0,-1)])
     const [confirm, setConfirm] = useState(false);
-    var totalStar = 0;
-    var fiveStarCount=0;
+    const [totalStar, setTotalStar] = useState(0);
+    const [fiveStarCount, setFiveStarCount] = useState(0);
 
     useEffect(()=>{
-        async function fetchData(){
-            await ResultService.getByUID(uid)
-            var res = [];//API returns array
-            res = ResultService.getResponse();
+        const fetchData = async () => {
+            try {
+                await ResultService.getByUID(uid);
+                const res = ResultService.getResponse();
 
-            if(res.length === 0)
-                setResults(res);
-            res.map((element, index) => {
-                var el = new Result();
-
-                el.id = element.id;
-                el.result = element.result;
-
-                var course = element.course;
-                el.course = new Course(course.id,course.name);
-
-                results[index] = el;
-            })
-
+                if(res.length === 0) {
+                    setResults(res);
+                } else {
+                    const processedResults = res.map((element) => {
+                        const el = new Result();
+                        el.id = element.id;
+                        el.result = element.result;
+                        const course = element.course;
+                        el.course = new Course(course.id, course.name);
+                        return el;
+                    });
+                    
+                    setResults(processedResults);
+                    const totalStars = processedResults.reduce((sum, el) => sum + el.result, 0);
+                    const fiveStarCnt = processedResults.filter(el => el.result === 5).length;
+                    setTotalStar(totalStars);
+                    setFiveStarCount(fiveStarCnt);
+                }
+            } catch (error) {
+                console.error("Error fetching results:", error);
+            }
             setConfirm(true);
-        }
+        };
 
         fetchData();
     },[])
@@ -71,39 +78,33 @@ export function Profile(){
         return (
             <div className='resultContent container-fluid'>
                 <ul className="results">
-                    <h1 className="align-center">Sonuçlar</h1>
+                    <h1 className="align-center">Results</h1>
                     <li className="glow-on-hover">
-                        Henüz bir sınava girmediniz. Yukardan bir kurs seç ve hemen sınava gir.
+                        You have not taken any exam yet. Choose a course above and take an exam.
                     </li>     
                 </ul>
                 <ProfileCard resultCount={0} totalStar={0} fiveStarCount={0}/>
             </div>
         )
     }
-    return (
-        <div className='resultContent container-fluid'>
-            <ul className="results">
-                <h1 className="align-center">Sonuçlar</h1>
-                <hr />
-                {results.map((element)=>{
-                    totalStar+=element.result;
-
-                    if(element.result === 5)
-                        fiveStarCount++;
-
-                    return (
-                        <li key={element.id} className='glow-on-hover'>{element.course.name}
-                            {
-                                [...Array(element.result)].map((e,i) => <span className="fa fa-star fa-spin fa-xl" key={i}></span>)
-                            }
+    else{
+        return (
+            <div className='resultContent container-fluid'>
+                <ul className="results">
+                    <h1 className="align-center">Results</h1>
+                    {results.map((element) => (
+                        <li key={element.id} className='glow-on-hover'>
+                            {element.course.name}
+                            {[...Array(element.result)].map((_, i) => (
+                                <span className="fa fa-star fa-spin fa-xl" key={i}></span>
+                            ))}
                         </li>
-                    )
-                })}
-                
-            </ul>
-            <ProfileCard resultCount={results.length} totalStar={totalStar} fiveStarCount={fiveStarCount}/>    
-        </div>
-    )
+                    ))}
+                </ul>
+                <ProfileCard resultCount={results.length} totalStar={totalStar} fiveStarCount={fiveStarCount}/>
+            </div>
+        )
+    }
 }
 
 
@@ -174,21 +175,22 @@ export default function Render({contentName}){
     },[isExamOpen])
 
     useEffect(()=>{
-        var res = new Result();
+        const res = new Result();
         const fetchResults = async () => {
-            await ResultService.getByUIDandCourseId(localStorage.getItem("uid"),course.id);
-
-            res=ResultService.getResponse();
-            if(res.result === 5)
-                setIsCourseFinished(true);
-            else
+            try {
+                await ResultService.getByUIDandCourseId(localStorage.getItem("uid"),course.id);
+                const result = ResultService.getResponse();
+                setIsCourseFinished(result.result === 5);
+            } catch (error) {
+                console.error("Error fetching course result:", error);
                 setIsCourseFinished(false);
+            }
+        };
+
+        if (course.id !== 0) {
+            fetchResults();
         }
-
-        fetchResults();
-
-        
-    })
+    }, [course.id])
     const forwardPage = () => {
         const newIndex=sectionIndex+1;
         
@@ -224,7 +226,7 @@ export default function Render({contentName}){
 
     const openExam = () => {
         let modalContent = document.getElementById("myModalContent")
-            .innerHTML="<p class='dot-load'>Sınav Başlıyor...</p>";
+            .innerHTML="<p class='dot-load'>Exam is starting...</p>";
         
         setTimeout(()=>{startExam()},2000)
     }
@@ -294,14 +296,14 @@ export default function Render({contentName}){
 
             {isExamOpen
                 ?
-                <div id="myModal" class="modal container-fluid">
+                <div id="myModal" className="modal container-fluid">
                     <div id="myModalContent">
                         <span className="close" onClick={() => setIsExamOpen(false)}>&times;</span>
-                        <center id="text-content">Sınava girmek istediğinize emin misiniz?</center>
-                        <center id="text-content"><i style={{color:"red"}}>*Bir kere girdikten sonra çıkış yapamazsınız</i></center>
+                        <center id="text-content">Are you sure you want to start the exam?</center>
+                        <center id="text-content"><i style={{color:"red"}}>*Once you start, you cannot exit.</i></center>
                         <div className='buttons'>
-                            <button className='btn-danger' onClick={() => setIsExamOpen(false)}>İptal Et</button>
-                            <button className='btn-alert' onClick={openExam}>Sınava Gir</button>
+                            <button className='btn-danger' onClick={() => setIsExamOpen(false)}>Cancel</button>
+                            <button className='btn-alert' onClick={openExam}>Start Exam</button>
                         </div>
                     </div>  
                 </div>

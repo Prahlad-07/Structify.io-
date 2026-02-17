@@ -33,7 +33,7 @@ export default function CourseMain() {
     },[isOpen])
 
     useEffect(() => {
-        console.log(currentContent);
+        // Content changed - no action needed
     }, [currentContent])
 
     const cancel = () =>{
@@ -42,15 +42,11 @@ export default function CourseMain() {
 
     const confirm = () =>{
         localStorage.clear();
-        document.getElementById("text-content").textContent = "Çıkış yapılıyor...";
+        document.getElementById("text-content").textContent = "Logging out...";
         setTimeout(()=>{navigate("/courseMain")},2000)
     }
 
     const handleContent = (contentName) => {
-        var temp = "";
-        Object.assign(temp, currentContent);
-        temp = contentName;
-
         setCurrentContent(contentName);
     }
 
@@ -108,21 +104,20 @@ export default function CourseMain() {
                 </nav>
                 <div>
                     <Render contentName = {currentContent}/>
-                    {isOpen
-                        ?
-                        <div id="myModal" class="modal container-fluid">
-                            <div class="modal-content">
-                                <span class="close" onClick={()=>{setIsOpen(false)}}>&times;</span>
-                                <center id="text-content">Çıkış yapmak istediğinize emin misiniz?</center>
-                                <div className='buttons'>
-                                    <button className='btn-danger' onClick={cancel}>İptal Et</button>
-                                    <button className='btn-alert' onClick={confirm}>Çıkış Yap</button>
+                    {isOpen ? (
+                        <div id="myModal" className="modal container-fluid">
+                            <div className="modal-content">
+                                <span className="close" onClick={cancel}>&times;</span>
+                                <center id="text-content">Are you sure you want to log out?</center>
+                                <div className="d-flex justify-content-center gap-2 mt-3">
+                                    <button className="btn-alert" onClick={confirm}>Log Out</button>
+                                    <button className="btn-alert" onClick={cancel}>Cancel</button>
                                 </div>
-                            </div>  
+                            </div>
                         </div>
-                        :
+                    ) : (
                         <></>
-                    }
+                    )}
                 </div>
             </div>
         )
@@ -147,5 +142,3 @@ export default function CourseMain() {
         return (AuthCheckBuilder("/courseMain"))
     }
 }
-
-

@@ -152,70 +152,107 @@ export default function Login() {
 
     
   }
-  const login = async (e)=>{
-    
-    //console.log(e);
+  const login = async (e) => {
     e.preventDefault();
 
-    if(validate()){
-      await UserService.login(loginModel.mail,loginModel.password)
-        .then((res)=>{
-          //console.log(res);
-          setResponse(UserService.getResponse());
-          if(UserService.getResponse().success === true){
-            setTimeout(()=>{navigate("/courseMain")},2000)
-          }
-        })
-      
-    }
-  }
-  const register = async (e)=>{
-
-    e.preventDefault();
-    
-    if(validate()){
-      await UserService.register(
-        registerModel.name,
-        registerModel.surname,
-        registerModel.mail,
-        registerModel.password);
+    if(validate()) {
+      try {
+        await UserService.login(loginModel.mail, loginModel.password);
+        const res = UserService.getResponse();
+        setResponse(res);
         
-      setResponse(UserService.getResponse());
-      setTimeout(()=>{window.location.reload()},2000)
+        if(res && res.success === true) {
+          setTimeout(() => {
+            navigate("/courseMain", { state: true });
+          }, 1500);
+        } else {
+          setResponse({
+            success: false,
+            message: res?.message || "Login failed. Please try again."
+          });
+        }
+      } catch (error) {
+        console.error("Login error:", error);
+        setResponse({
+          success: false,
+          message: "An error occurred. Please try again later."
+        });
+      }
     }
   }
-  const handle = (e,whichModel) => {
-    whichModel[e.target.id]=e.target.value;
-  } 
+  const register = async (e) => {
+    e.preventDefault();
+    
+    if(validate()) {
+      try {
+        await UserService.register(
+          registerModel.name,
+          registerModel.surname,
+          registerModel.mail,
+          registerModel.password
+        );
+        
+        const res = UserService.getResponse();
+        setResponse(res);
+        
+        if(res && res.success === true) {
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+        } else {
+          setResponse({
+            success: false,
+            message: res?.message || "Registration failed. Please try again."
+          });
+        }
+      } catch (error) {
+        console.error("Register error:", error);
+        setResponse({
+          success: false,
+          message: "An error occurred during registration. Please try again later."
+        });
+      }
+    }
+  }
+  const handle = (e, whichModel) => {
+    whichModel[e.target.id] = e.target.value;
+  }
+
   const handlePassword = (e) => {
-    let password=registerModel.password;
-    if(e.target.id === "password"){
-      password=document.getElementById("repassword").value;
-    }
+    const { id, value } = e.target;
+    const password = id === "password" ? value : registerModel.password;
+    const rePassword = id === "repassword" ? value : document.getElementById("repassword")?.value || "";
     
-    let isEqual= (e.target.value !== password);
+    const isEqual = password !== rePassword;
     
-    if(isEqual)
-      setPassAlert("***Şifreler eşleşmiyor");  
-
-    else
+    if(isEqual) {
+      setPassAlert("***Passwords do not match");  
+    } else {
       setPassAlert("");
+    }
 
-
-    if(view === "signUp")
-      document.getElementById("registerBtn").disabled=isEqual;
+    if(view === "signUp") {
+      const registerBtn = document.getElementById("registerBtn");
+      if(registerBtn) {
+        registerBtn.disabled = isEqual;
+      }
+    }
   }
+
+  const validate = () => {
+    let valid = true;
+    const inputs = document.querySelectorAll("input");
+    
+    inputs.forEach((input) => {
+      if(!input.validity.valid) {
+        valid = false;             
+      }            
+    });
+    return valid;
+  }
+
   const getPassAlert = ()=>{
     return passAlert;
-  }
-  const validate = () => {
-    var valid=true;
-    document.querySelectorAll("input").forEach((e)=>{
-      if(!e.validity.valid){
-        valid=false;             
-      }            
-    })
-    return valid;
   }
   const getResponse = () => {
     return response;

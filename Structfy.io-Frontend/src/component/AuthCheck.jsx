@@ -26,7 +26,7 @@ class AuthCheck extends Component {
     this.validateToken(token);
 
     if(token === null){
-        {alert("Lütfen giriş yapin")}
+        {alert("Please log in")}
         return (
             <Navigate replace to="/"/>      
         )       

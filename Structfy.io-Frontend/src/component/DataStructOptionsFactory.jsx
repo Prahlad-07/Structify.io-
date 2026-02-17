@@ -383,7 +383,7 @@ function LinkedListOptions({dataStruct}) {
             <label htmlFor="input-data-insert">Insert</label>
             <input type="text" name="" id="input-data-insert-val" placeholder='Value (1)' style={{width:"27%", fontSize:"large"}}/>
             <input type="text" name="" id="input-data-insert-index" placeholder='Index (0 -> length-1)' style={{width:"50%", fontSize:"small"}}/>
-            <div className="btn btn-answer" onClick={insert}>Uygula</div>
+            <div className="btn btn-answer" onClick={insert}>Apply</div>
           </li>
           <li>
             <label htmlFor="input-data-delete">Delete</label>
@@ -473,12 +473,12 @@ function TreeOptions({dataStruct}) {
           <li>
             <label htmlFor="input-data-remove">Delete</label>
             <input type="text" name="" id="input-data-remove" placeholder='Value (1)'/>
-            <div className="btn btn-answer" onClick={remove}>Uygula</div>
+            <div className="btn btn-answer" onClick={remove}>Apply</div>
           </li>
           <li>
             <label htmlFor="input-data-peek">Peek</label>
             <input type="text" name="" id="input-data-peek" placeholder='Value (1)'/>
-            <div className="btn btn-answer" onClick={peek}>Uygula</div>
+            <div className="btn btn-answer" onClick={peek}>Apply</div>
           </li>
          
         </ol>
@@ -504,7 +504,7 @@ export default function DataStructOptionsFactory(props) {
             return <TreeOptions dataStruct={props.dataStruct}/>;
 
        default:
-            return <>Geçersiz Yapı</>
+            return <>Invalid Structure</>
     }
 }
   

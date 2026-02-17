@@ -1,33 +1,32 @@
 [
-    {
-        "title" : "Tree Nedir?",
-        "contentText" : "Tree, hiyerarşik bir veri yapısıdır ve düğümler ve bu düğümleri birbirine bağlayan kenarlarla temsil edilir.Her düğüm, bir kök düğümle başlar ve alt düğümler aracılığıyla genişler.Tree, bir ağaç benzetmesi kullanılarak görselleştirilebilir.",
-        "imagePaths" : ["https://cdn.programiz.com/sites/tutorial2program/files/tree_0.png"]
-    },
-    {
-        "title" : "Tree Yapısı ve Özellikleri",
-        "contentText" : "Tree'nin bir kök düğümü vardır ve her düğüm, birden fazla alt düğüm ile genişleyebilir.\n\nDüğümler arasındaki ilişki, bir ebeveyn-düğüm ve çocuk-düğüm ilişkisiyle tanımlanır.\n\nHer düğüm, yalnızca bir üst düğüme bağlanabilir, ancak bir düğümün birden fazla alt düğümü olabilir.",
-        "imagePaths" : []
-    },
-    {
-        "title" : "Tree'nin Çeşitleri",
-        "contentText" : "İkili Tree: Her düğümün en fazla iki alt düğümü olabileceği bir ağaç türüdür.\n\nAVL Tree: Dengeli bir ikili arama ağacıdır ve arama işlemlerini hızlandırır.\n\nK-ary Tree: Her düğümün en fazla K alt düğümüne sahip olabileceği bir ağaç türüdür.\n\nB-Tree: Disk tabanlı veri depolama yapısında kullanılan bir ağaç türüdür.",
-        "imagePaths" : []
-    },
-    {
-        "title" : "Tree Kullanım Alanları",
-        "contentText" : "Veritabanı yönetimi: B-Tree yapısı, veritabanlarında dizinleme ve sıralama işlemlerinde kullanılır.\n\nDosya sistemleri: Tree yapısı, dosya ve klasörleri hiyerarşik bir şekilde organize etmek için kullanılır.\n\nYapay Zeka: Karar ağaçları (decision trees) veri sınıflandırma ve tahminleme algoritmalarında kullanılır.",
-        "imagePaths" : []
-    },
-    {
-        "title" : "Tree Veri Yapısının Avantajları",
-        "contentText" : "Hızlı veri erişimi: Tree yapısı, arama, ekleme ve silme işlemlerini hızlı bir şekilde gerçekleştirir.\n\nHiyerarşik organizasyon: Tree, verileri hiyerarşik bir şekilde düzenleyerek yapısal olarak anlamlı bir organizasyon sağlar.\n\nVeri işleme ve analiz: Karar ağaçları, verilerin sınıflandırılması ve tahminlenmesi için etkili bir yöntemdir.",
-        "imagePaths" : []
-    },
-    {
-        "title" : "Tree Uygulama Örnekleri",
-        "contentText" : "İnternet ağacı: Web sayfalarını ve alt sayfalarını temsil etmek için tree yapısı kullanılır.\n\nOrganizasyonel hiyerarşi: Şirketlerde",
-        "imagePaths" : []
-    }
-
+  {
+    "title": "What is a Tree?",
+    "contentText": "A tree is a hierarchical data structure represented by nodes and the edges connecting them. It starts from a root node and expands through child nodes. A tree is commonly visualized like an upside-down tree.",
+    "imagePaths": ["https://cdn.programiz.com/sites/tutorial2program/files/tree_0.png"]
+  },
+  {
+    "title": "Tree Structure and Properties",
+    "contentText": "A tree has a single root node, and each node may have one or more children. The relationship between nodes is defined as parent-child. Every node except the root has exactly one parent.",
+    "imagePaths": []
+  },
+  {
+    "title": "Types of Trees",
+    "contentText": "Binary Tree: Each node has at most two children. AVL Tree: A self-balancing binary search tree. K-ary Tree: Each node can have up to K children. B-Tree: A balanced tree used in databases and file systems.",
+    "imagePaths": []
+  },
+  {
+    "title": "Tree Use Cases",
+    "contentText": "Trees are used in database indexing, file system organization, expression parsing, and decision-making algorithms in AI.",
+    "imagePaths": []
+  },
+  {
+    "title": "Advantages of Trees",
+    "contentText": "Trees provide efficient search, insertion, and deletion for many scenarios. They represent hierarchical relationships naturally and support scalable data organization.",
+    "imagePaths": []
+  },
+  {
+    "title": "Example Applications",
+    "contentText": "Examples include website navigation structures, organization charts, and category hierarchies in e-commerce systems.",
+    "imagePaths": []
+  }
 ]

@@ -24,20 +24,22 @@ const UserService = {
         state.response = val;
     },
     login: async function (mail, password) {
-        let loginUser = new LoginUserRequest(mail, password);
-        //console.log(loginUser);
-        
-         await postFetch(loginUser, LOGIN_ENDPOINT);
-         let res=state.response;
+        try {
+            const loginUser = new LoginUserRequest(mail, password);
+            await postFetch(loginUser, LOGIN_ENDPOINT);
+            const res = state.response;
 
-         if(res.success === true){
-            localStorage.setItem("token",res.data.token.key);
-            localStorage.setItem("uid",res.data.uid)
-            localStorage.setItem("mail",res.data.mail)
-            localStorage.setItem("name",res.data.name)
-            localStorage.setItem("surname",res.data.surname)
-
-         }
+            if(res.success === true) {
+                localStorage.setItem("token",res.data.token.key);
+                localStorage.setItem("uid",res.data.uid)
+                localStorage.setItem("mail",res.data.mail)
+                localStorage.setItem("name",res.data.name)
+                localStorage.setItem("surname",res.data.surname)
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+            throw error;
+        }
     },
 
     logout:function(){
@@ -46,26 +48,25 @@ const UserService = {
     },
     
     isTokenValid:async function(token){
-         return fetch(VALIDATE_ENDPOINT, {
-            method: 'post',
-            headers: { 'Content-Type': 'application/json' },
-            body:token,
-           })
-           .then((response) =>{
-                if(response.status === 403){
-                    alert("Lütfen giriş yapınız.")
-                    window.location.replace("/");
-                }
-                return response.json()
-           })
-           .then((responseJson) => {
-                UserService.setResponse(responseJson);
-               // console.log(responseJson);
-           })
-           .catch((error) => {
-             console.error(error);
-           });
-    
+        try {
+            const response = await fetch(VALIDATE_ENDPOINT, {
+                method: 'post',
+                headers: { 'Content-Type': 'application/json' },
+                body: token,
+            });
+            
+            if(response.status === 403){
+                alert("Lütfen giriş yapınız.")
+                window.location.replace("/");
+            }
+            
+            const responseJson = await response.json();
+            UserService.setResponse(responseJson);
+            return responseJson;
+        } catch (error) {
+            console.error("Token validation error:", error);
+            throw error;
+        }
     },
 
     register: async function (name, surname, mail, password) {

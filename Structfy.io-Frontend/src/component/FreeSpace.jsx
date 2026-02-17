@@ -423,7 +423,7 @@ export default function FreeSpace() {
                         </> 
                         :
                         <div className='data-info '>
-                           <center> Serbest Geliştirme Ortamına Hoş geldiniz. <br />Lütfen Yukarıdan Bir veri yapısı seçiniz</center>
+                           <center>Welcome to Free Practice Mode. <br />Please choose a data structure from above.</center>
                         </div>  
                     }
                     </div>
@@ -436,7 +436,7 @@ export default function FreeSpace() {
                                 dataStruct = {dataStruct}/>
                             :
                             <>
-                                Bir veri yapısı seçtiğinizde seçenekler burada belirecektir.
+                                Options will appear here once you select a data structure.
                             </>
                         }
                         
