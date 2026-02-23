@@ -1,144 +1,124 @@
-
-import React, { useState } from 'react'
-import {useLocation, useNavigate } from 'react-router-dom';
-import {AuthCheckBuilder} from './AuthCheck'
+import React, { useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { AuthCheckBuilder } from './AuthCheck';
 import Render from './Content';
 import '../css/layout.css';
 import '../css/mymodal.css';
-import { useEffect } from 'react';
-//import * as Loader from 'react-loader-spinner'
-
 import CONTENT_NAME from '../utils/CONTENT_NAME';
 
 export default function CourseMain() {
-    const location = useLocation();
-    const navigate = useNavigate();
-    const isAuth = location.state;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isAuth = location.state === true || Boolean(localStorage.getItem('token'));
+  const [name] = useState(localStorage.getItem('name'));
+  const [surname] = useState(localStorage.getItem('surname'));
+  const [currentContent, setCurrentContent] = useState(CONTENT_NAME.CONTENT);
+  const [isOpen, setIsOpen] = useState(false);
 
-    const [name,] = useState(localStorage.getItem("name"));
-    const [surname,] = useState(localStorage.getItem("surname"));
-    const [currentContent,setCurrentContent] = useState("content");
-    const [isOpen, setIsOpen] = useState(false);
+  const courseTabs = useMemo(
+    () => [
+      {
+        key: CONTENT_NAME.STACK,
+        label: 'Stack',
+        icon: 'https://cdn-icons-png.flaticon.com/32/2111/2111690.png'
+      },
+      {
+        key: CONTENT_NAME.QUEUE,
+        label: 'Queue',
+        icon: 'https://cdn-icons-png.flaticon.com/32/8201/8201691.png'
+      },
+      {
+        key: CONTENT_NAME.LINKEDLIST,
+        label: 'Linked List',
+        icon: 'https://cdn-icons-png.flaticon.com/32/3462/3462381.png'
+      },
+      {
+        key: CONTENT_NAME.TREE,
+        label: 'Tree',
+        icon: 'https://cdn-icons-png.flaticon.com/32/4160/4160135.png'
+      },
+      {
+        key: CONTENT_NAME.GRAPH,
+        label: 'Graph',
+        icon: 'https://cdn-icons-png.flaticon.com/32/4858/4858761.png'
+      }
+    ],
+    []
+  );
 
-    useEffect(()=>{
-        let modal = document.getElementById("myModal");
-        if(modal !== null){
-            if(isOpen){
-                modal.style.display = "block"; 
-            }
-            else{
-                modal.style.display = "none";
-            }
-        }
-    },[isOpen])
+  const confirmLogout = () => {
+    localStorage.clear();
+    setIsOpen(false);
+    navigate('/');
+  };
 
-    useEffect(() => {
-        // Content changed - no action needed
-    }, [currentContent])
+  if (isAuth !== true) {
+    return AuthCheckBuilder('/courseMain');
+  }
 
-    const cancel = () =>{
-        setIsOpen(false);
-    }
+  return (
+    <div className="courseMainBody">
+      <nav className="container-fluid">
+        <div className="leftitem">
+          <ul>
+            <li className="menu-item-accent" onClick={() => navigate('/freespace')}>
+              <img src="https://cdn-icons-png.flaticon.com/32/10061/10061724.png" alt="Free Space" />
+              Open Free Space
+            </li>
+          </ul>
+        </div>
 
-    const confirm = () =>{
-        localStorage.clear();
-        document.getElementById("text-content").textContent = "Logging out...";
-        setTimeout(()=>{navigate("/courseMain")},2000)
-    }
+        <div className="centeritem">
+          <ul>
+            {courseTabs.map((tab) => (
+              <li
+                key={tab.key}
+                className={currentContent === tab.key ? 'menu-item-active' : ''}
+                onClick={() => setCurrentContent(tab.key)}
+              >
+                <img src={tab.icon} alt={tab.label} />
+                {tab.label}
+              </li>
+            ))}
+          </ul>
+        </div>
 
-    const handleContent = (contentName) => {
-        setCurrentContent(contentName);
-    }
+        <div className="rightitem">
+          <ul>
+            <li
+              className={currentContent === CONTENT_NAME.PROFILE ? 'menu-item-user menu-item-active' : 'menu-item-user'}
+              onClick={() => setCurrentContent(CONTENT_NAME.PROFILE)}
+            >
+              <i className="fa fa-user fa-xl"></i>
+              {` ${name || ''} ${surname || ''}`.trim() || 'My Profile'}
+            </li>
+            <li className="menu-item-logout" onClick={() => setIsOpen(true)}>
+              Log Out
+            </li>
+          </ul>
+        </div>
+      </nav>
 
-    if(isAuth === true){
-        return (
-            <div className="courseMainBody">
-                <nav className="container-fluid">
-                    <div className="lefttitem">
-                        <ul>
-                            <li style={{backgroundColor:'blueviolet'}} onClick = {() => {navigate("/freespace")}}>
-                                <img src="https://cdn-icons-png.flaticon.com/32/10061/10061724.png" alt='freeSpace' /> 
-                                Go To Free Space
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="centeritem">
-                        <ul>
-                            <li onClick={()=>{handleContent(CONTENT_NAME.STACK)}}>
-                                <img src="https://cdn-icons-png.flaticon.com/32/2111/2111690.png" alt='Stack' /> 
-                                Stack
-                            </li>
-                            <li onClick={()=>{handleContent(CONTENT_NAME.QUEUE)}}>
-                                <img src="https://cdn-icons-png.flaticon.com/32/8201/8201691.png" alt='Queue' /> 
-                                Queue
-                            </li>
-                            <li onClick={()=>{handleContent(CONTENT_NAME.LINKEDLIST)}}>
-                                <img src="https://cdn-icons-png.flaticon.com/32/3462/3462381.png" alt='Linked List' /> 
-                                Linked List
-                            </li>
-                            <li onClick={()=>{handleContent(CONTENT_NAME.TREE)}}>
-                                <img src="https://cdn-icons-png.flaticon.com/32/4160/4160135.png" alt='Tree' /> 
-                                Tree
-                            </li>
-                            <li onClick={()=>{handleContent(CONTENT_NAME.GRAPH)}}>
-                                <img src="https://cdn-icons-png.flaticon.com/32/4858/4858761.png" alt='Graph' /> 
-                                Graph
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="rightitem ">
-                        <ul>
-                            <li className="bg-dark" 
-                                onClick={()=>{handleContent("profile")}}>
-                                <i className="fa fa-user fa-xl"></i>
-                                {` ${name} ${surname}`}
-                            </li>
-                            <li id="logout" 
-                                className="bg-danger" 
-                                style={{padding:'10px'}}
-                                onClick={()=>{setIsOpen(true)}}>
-                                Log Out
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
-                <div>
-                    <Render contentName = {currentContent}/>
-                    {isOpen ? (
-                        <div id="myModal" className="modal container-fluid">
-                            <div className="modal-content">
-                                <span className="close" onClick={cancel}>&times;</span>
-                                <center id="text-content">Are you sure you want to log out?</center>
-                                <div className="d-flex justify-content-center gap-2 mt-3">
-                                    <button className="btn-alert" onClick={confirm}>Log Out</button>
-                                    <button className="btn-alert" onClick={cancel}>Cancel</button>
-                                </div>
-                            </div>
-                        </div>
-                    ) : (
-                        <></>
-                    )}
-                </div>
+      <Render contentName={currentContent} />
+
+      {isOpen ? (
+        <div id="myModal" className="modal container-fluid">
+          <div className="modal-content">
+            <span className="close" onClick={() => setIsOpen(false)}>
+              &times;
+            </span>
+            <center id="text-content">Are you sure you want to log out?</center>
+            <div className="d-flex justify-content-center gap-2 mt-3">
+              <button className="btn-alert" onClick={confirmLogout}>
+                Log Out
+              </button>
+              <button className="btn-alert" onClick={() => setIsOpen(false)}>
+                Cancel
+              </button>
             </div>
-        )
-    }
-    
-
-    /*else if((isAuth === undefined))
-    {
-        
-        return(
-            <Loader.TailSpin
-                type="Puff"
-                color="#00BFFF"
-                height={100}
-                width={100}
-            />
-        )
-    }*/
-
-    else{
-
-        return (AuthCheckBuilder("/courseMain"))
-    }
+          </div>
+        </div>
+      ) : null}
+    </div>
+  );
 }

@@ -72,6 +72,11 @@
   border-color: #b9cce9;
 }
 
+.section-active {
+  border: 2px solid #2f66cc !important;
+  background: #e9f1ff !important;
+}
+
 .glow-on-hover {
   transition: background 140ms ease, transform 140ms ease;
 }
@@ -156,4 +161,3 @@
     position: static;
   }
 }
-

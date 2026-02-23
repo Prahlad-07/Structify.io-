@@ -1,272 +1,262 @@
 import React, { useState } from 'react';
-import UserService from '../service/UserService'
+import UserService from '../service/UserService';
 import { useNavigate } from 'react-router-dom';
 import '../css/login.scss';
 
 export default function Login() {
-  const navigate=useNavigate();
-  const [view,setView] = useState("logIn");
-  const [passAlert,setPassAlert] = useState("");
-  const [loginModel,setLoginModel] = useState({mail:"",password:""});
-  const [registerModel,setRegisterModel] = useState({mail:"",password:"",name:"",surname:""});
-  const [response,setResponse] = useState({success:"",message:""});
-  /*{
-      currentView: "logIn",
-      passAlert: "",
-      login:{
-        mail:"",
-        password:""
-      },
-      response:{
-        success:"",
-        message:"",
-      },
-  
-      register:{
-        mail:"",
-        password:"",
-        name:"",
-        surname:""
-      },
-  
-     
-    } */
-  
-  const changeView = (view) => {
-    setView(view);
-    setPassAlert("");
-    setResponse("");
+  const navigate = useNavigate();
+  const [view, setView] = useState('logIn');
+  const [passAlert, setPassAlert] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loginModel, setLoginModel] = useState({ mail: '', password: '' });
+  const [registerModel, setRegisterModel] = useState({
+    mail: '',
+    password: '',
+    repassword: '',
+    name: '',
+    surname: ''
+  });
+  const [response, setResponse] = useState({ success: null, message: '' });
 
-    document.querySelectorAll('form').forEach((item) => {item.reset()})
-    
-  }
-  const currentView = () => {
-    switch(view) {
-      case "signUp":
-        return (            
-          <form>
-            <h2>Sign Up!</h2>
-            <fieldset>
-              <legend>Create An Account</legend>
-              <ul>
-                <li>
-                  <label htmlFor="mail">Mail:</label>
-                  <input
-                    id="mail"
-                    onInput={(e) => handle(e,registerModel)}
-                    maxLength={50}                  
-                    required/>
-                </li>
-                <li>
-                  <label htmlFor="name">Name:</label>
-                  <input 
-                    onChange={(e) => handle(e,registerModel)} 
-                    type="text" 
-                    id="name"
-                    maxLength={40}
-                    required/>
-                </li>
-                <li>
-                  <label htmlFor="surname">Surname:</label>
-                  <input 
-                    onChange={(e) => handle(e,registerModel)} 
-                    type="text" 
-                    id="surname" 
-                    maxLength={40}
-                    required/>
-                </li>
-                <li>
-                  <label htmlFor="password">Password:</label>
-                  <input
-                    onChange={(e) => {handlePassword(e); handle(e,registerModel)}}
-                    type="password" 
-                    id="password"
-                    minLength={8}
-                    maxLength={40}
-                    required/>
-                </li>
-                <li>
-                  <label htmlFor="repassword">Repassword:</label>
-                  <input 
-                    onChange={(e) => handlePassword(e)}
-                    type="password"
-                    id="repassword" 
-                    maxLength={40}
-                    required/>   
-                </li>
-                <label id="registerAlert" style={{color:getColor()}} >{getResponse().message}</label>
-                <label id="passAlert" className='text-danger' >{getPassAlert()}</label>
-              </ul>
-             
-            
-            </fieldset> 
-            <>
-              <button 
-                id="registerBtn" 
-                onClick={(e)=>register(e)} >Register</button>
+  const clearFeedback = () => {
+    setPassAlert('');
+    setResponse({ success: null, message: '' });
+  };
 
-              <button type="button" onClick={ () => changeView("logIn")}>Have an Account?</button>
-            </>
-          </form>
-        )
-        
-      case "logIn":
-            return (
-            <form onSubmit={()=>{return false}}>
-                <h2>Welcome To Data Structures Course!</h2>
-                <fieldset>
-                <legend>Log In</legend>
-                <ul>
-                    <li>
-                    <label htmlFor="mail">Mail:</label>
-                    <input 
-                      onInput={(e) => {handle(e,loginModel)}} 
-                      id="mail" 
-                      type="email"
-                      maxLength="50" 
-                      required/>
-                    </li>
-                    <li>
-                    <label htmlFor="password">Password:</label>
-                    <input 
-                      type="password" 
-                      id="password"  
-                      onInput={(e) => {handle(e,loginModel)}}required/>
-                    </li>
-                    
-                </ul>
-                </fieldset>
-                <label style={{color:getColor()}}>{getResponse().message}</label>
-                <button 
-                  id="loginBtn" 
-                  onClick={(e) => {login(e)}}>Login</button>
+  const changeView = (nextView) => {
+    setView(nextView);
+    setLoginModel({ mail: '', password: '' });
+    setRegisterModel({ mail: '', password: '', repassword: '', name: '', surname: '' });
+    clearFeedback();
+  };
 
-                <button type="button" onClick={() => changeView("signUp")}>Create An Account</button>
-                <a className='btn' style={{backgroundColor: 'blueviolet', color: 'white'}}
-                  onClick={(e) => {navigate('/freespace')}}>Go To Free Space</a>
-            </form>
-        )
-      default:
-        break
+  const isLoginValid = () => loginModel.mail.trim() && loginModel.password.trim();
+  const isEmailValid = (mail) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail);
+  const isRegisterValid = () =>
+    registerModel.mail.trim() &&
+    isEmailValid(registerModel.mail.trim()) &&
+    registerModel.name.trim() &&
+    registerModel.surname.trim() &&
+    registerModel.password.length >= 8 &&
+    registerModel.password === registerModel.repassword;
+
+  const getFeedbackClass = () => {
+    if (!response.message) {
+      return '';
     }
+    return response.success ? 'is-success' : 'is-error';
+  };
 
-    
-  }
+  const handleLoginField = (e) => {
+    const { id, value } = e.target;
+    setLoginModel((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleRegisterField = (e) => {
+    const { id, value } = e.target;
+    setRegisterModel((prev) => {
+      const updated = { ...prev, [id]: value };
+      if (updated.password && updated.repassword && updated.password !== updated.repassword) {
+        setPassAlert('Passwords do not match');
+      } else {
+        setPassAlert('');
+      }
+      return updated;
+    });
+  };
+
   const login = async (e) => {
     e.preventDefault();
-
-    if(validate()) {
+    clearFeedback();
+    if (isLoginValid()) {
+      setIsSubmitting(true);
       try {
-        await UserService.login(loginModel.mail, loginModel.password);
-        const res = UserService.getResponse();
+        const res = await UserService.login(loginModel.mail.trim(), loginModel.password);
         setResponse(res);
-        
-        if(res && res.success === true) {
+
+        if (res && res.success === true) {
           setTimeout(() => {
-            navigate("/courseMain", { state: true });
+            navigate('/courseMain', { state: true });
           }, 1500);
-        } else {
-          setResponse({
-            success: false,
-            message: res?.message || "Login failed. Please try again."
-          });
         }
       } catch (error) {
-        console.error("Login error:", error);
+        console.error('Login error:', error);
         setResponse({
           success: false,
-          message: "An error occurred. Please try again later."
+          message: error?.message || 'Unable to sign in right now. Please try again.'
         });
+      } finally {
+        setIsSubmitting(false);
       }
+    } else {
+      setResponse({ success: false, message: 'Please enter a valid email and password.' });
     }
-  }
+  };
+
   const register = async (e) => {
     e.preventDefault();
-    
-    if(validate()) {
+    clearFeedback();
+    if (isRegisterValid()) {
+      setIsSubmitting(true);
       try {
-        await UserService.register(
+        const res = await UserService.register(
           registerModel.name,
           registerModel.surname,
           registerModel.mail,
           registerModel.password
         );
-        
-        const res = UserService.getResponse();
         setResponse(res);
-        
-        if(res && res.success === true) {
+
+        if (res && res.success === true) {
           setTimeout(() => {
-            window.location.reload();
+            changeView('logIn');
+            setResponse({ success: true, message: 'Registration successful. Please login.' });
           }, 1500);
-        } else {
-          setResponse({
-            success: false,
-            message: res?.message || "Registration failed. Please try again."
-          });
         }
       } catch (error) {
-        console.error("Register error:", error);
+        console.error('Register error:', error);
         setResponse({
           success: false,
-          message: "An error occurred during registration. Please try again later."
+          message: error?.message || 'Unable to register right now. Please try again.'
         });
+      } finally {
+        setIsSubmitting(false);
       }
-    }
-  }
-  const handle = (e, whichModel) => {
-    whichModel[e.target.id] = e.target.value;
-  }
-
-  const handlePassword = (e) => {
-    const { id, value } = e.target;
-    const password = id === "password" ? value : registerModel.password;
-    const rePassword = id === "repassword" ? value : document.getElementById("repassword")?.value || "";
-    
-    const isEqual = password !== rePassword;
-    
-    if(isEqual) {
-      setPassAlert("***Passwords do not match");  
     } else {
-      setPassAlert("");
+      setResponse({
+        success: false,
+        message: 'Please complete all fields with a valid email and matching passwords.'
+      });
     }
+  };
 
-    if(view === "signUp") {
-      const registerBtn = document.getElementById("registerBtn");
-      if(registerBtn) {
-        registerBtn.disabled = isEqual;
-      }
-    }
-  }
-
-  const validate = () => {
-    let valid = true;
-    const inputs = document.querySelectorAll("input");
-    
-    inputs.forEach((input) => {
-      if(!input.validity.valid) {
-        valid = false;             
-      }            
-    });
-    return valid;
-  }
-
-  const getPassAlert = ()=>{
-    return passAlert;
-  }
-  const getResponse = () => {
-    return response;
-  }
-  const getColor = () => {
-    let res=getResponse();
-    
-    return res.success ? 'green' : 'red';
-  }
-  
   return (
     <section id="entry-page">
-      {currentView()}
-      
+      <div className="auth-panel">
+        <div className="auth-brand">
+          <h1>Structify</h1>
+          <p>Learn data structures with interactive visuals and guided exams.</p>
+          <button type="button" className="ghost-action" onClick={() => navigate('/freespace')}>
+            Explore Free Space
+          </button>
+        </div>
+
+        {view === 'signUp' ? (
+          <form className="auth-form" onSubmit={register}>
+            <h2>Create Account</h2>
+            <fieldset>
+              <legend>Sign Up</legend>
+              <ul>
+                <li>
+                  <label htmlFor="mail">Email</label>
+                  <input
+                    id="mail"
+                    value={registerModel.mail}
+                    onChange={handleRegisterField}
+                    type="email"
+                    maxLength={50}
+                    required
+                  />
+                </li>
+                <li>
+                  <label htmlFor="name">First Name</label>
+                  <input
+                    id="name"
+                    value={registerModel.name}
+                    onChange={handleRegisterField}
+                    type="text"
+                    maxLength={40}
+                    required
+                  />
+                </li>
+                <li>
+                  <label htmlFor="surname">Last Name</label>
+                  <input
+                    id="surname"
+                    value={registerModel.surname}
+                    onChange={handleRegisterField}
+                    type="text"
+                    maxLength={40}
+                    required
+                  />
+                </li>
+                <li>
+                  <label htmlFor="password">Password</label>
+                  <input
+                    id="password"
+                    value={registerModel.password}
+                    onChange={handleRegisterField}
+                    type="password"
+                    minLength={8}
+                    maxLength={40}
+                    required
+                  />
+                </li>
+                <li>
+                  <label htmlFor="repassword">Confirm</label>
+                  <input
+                    id="repassword"
+                    value={registerModel.repassword}
+                    onChange={handleRegisterField}
+                    type="password"
+                    maxLength={40}
+                    required
+                  />
+                </li>
+              </ul>
+            </fieldset>
+
+            {passAlert ? <p className="form-feedback is-error">{passAlert}</p> : null}
+            {response.message ? <p className={`form-feedback ${getFeedbackClass()}`}>{response.message}</p> : null}
+
+            <button id="registerBtn" type="submit" disabled={!isRegisterValid() || isSubmitting}>
+              {isSubmitting ? 'Registering...' : 'Register'}
+            </button>
+            <button type="button" className="secondary-action" onClick={() => changeView('logIn')}>
+              Have an account? Login
+            </button>
+          </form>
+        ) : (
+          <form className="auth-form" onSubmit={login}>
+            <h2>Welcome Back</h2>
+            <fieldset>
+              <legend>Login</legend>
+              <ul>
+                <li>
+                  <label htmlFor="mail">Email</label>
+                  <input
+                    id="mail"
+                    value={loginModel.mail}
+                    onChange={handleLoginField}
+                    type="email"
+                    maxLength={50}
+                    required
+                  />
+                </li>
+                <li>
+                  <label htmlFor="password">Password</label>
+                  <input
+                    id="password"
+                    value={loginModel.password}
+                    onChange={handleLoginField}
+                    type="password"
+                    required
+                  />
+                </li>
+              </ul>
+            </fieldset>
+
+            {response.message ? <p className={`form-feedback ${getFeedbackClass()}`}>{response.message}</p> : null}
+
+            <button id="loginBtn" type="submit" disabled={!isLoginValid() || isSubmitting}>
+              {isSubmitting ? 'Signing in...' : 'Login'}
+            </button>
+            <button type="button" className="secondary-action" onClick={() => changeView('signUp')}>
+              Create Account
+            </button>
+          </form>
+        )}
+      </div>
     </section>
   );
 }
